@@ -19,7 +19,6 @@ def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Create tasks table if it does not exist
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,11 +27,9 @@ def init_db():
         )
     """)
     
-    # Check row count
     cursor.execute("SELECT COUNT(*) FROM tasks")
     count = cursor.fetchone()[0]
     
-    # Seed 3 initial tasks only if table is empty
     if count == 0:
         initial_tasks = [
             ("Buy groceries", 0),
@@ -47,7 +44,6 @@ def init_db():
         
     conn.close()
 
-# Initialize database schema on startup
 @app.on_event("startup")
 def startup_event():
     init_db()
@@ -63,3 +59,34 @@ def get_root():
 @app.get("/health", summary="Health check endpoint")
 def get_health():
     return {"status": "ok"}
+
+# GET /tasks - Read all tasks from SQLite
+@app.get("/tasks", summary="List all tasks")
+def get_tasks():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, title, done FROM tasks")
+    rows = cursor.fetchall()
+    conn.close()
+    
+    return [
+        {"id": row["id"], "title": row["title"], "done": bool(row["done"])}
+        for row in rows
+    ]
+
+# GET /tasks/{task_id} - Read a single task by ID from SQLite
+@app.get("/tasks/{task_id}", summary="Get a task by ID")
+def get_task(task_id: int):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, title, done FROM tasks WHERE id = ?", (task_id,))
+    row = cursor.fetchone()
+    conn.close()
+    
+    if row is None:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "Task not found"}
+        )
+    
+    return {"id": row["id"], "title": row["title"], "done": bool(row["done"])}
