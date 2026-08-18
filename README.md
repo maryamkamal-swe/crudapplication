@@ -57,7 +57,9 @@ SELECT * FROM tasks WHERE done = 1;
 ## 📸 Screenshots
 
 ### Database Viewer (DB Browser for SQLite)
-![Database Viewer](db-browser.png)
+![Database Viewer](sql_explored.png)
+(database_overview.png)
+
 
 ### Swagger UI
 ![Swagger UI](swagger-ui.png)
