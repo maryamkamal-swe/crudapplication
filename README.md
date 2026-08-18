@@ -33,17 +33,39 @@ A lightweight RESTful CRUD API built with Python and FastAPI, backed by a SQLite
 
 ---
 
-## 📑 API Endpoints
-
-| Method | Endpoint | Description | Status Codes |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/tasks` | List all tasks | 200 |
-| `GET` | `/tasks/{id}` | Get task by ID | 200, 404 |
-| `POST` | `/tasks` | Create task | 201, 400 |
-| `PUT` | `/tasks/{id}` | Update task | 200, 400, 404 |
-| `DELETE` | `/tasks/{id}` | Delete task | 204, 404 |
+The API will be available at `http://localhost:8000`.
 
 ---
+
+## 📑 API Endpoints
+
+| HTTP Method | Endpoint | Description | Expected Status Codes |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/` | API Metadata | 200 |
+| `GET` | `/health` | Server Health Check | 200 |
+| `GET` | `/tasks` | Retrieve all tasks | 200 |
+| `GET` | `/tasks/{id}` | Retrieve a single task by ID | 200, 404 |
+| `POST` | `/tasks` | Create a new task (validates `title`) | 201, 400 |
+| `PUT` | `/tasks/{id}` | Update an existing task | 200, 400, 404 |
+| `DELETE` | `/tasks/{id}` | Delete a task by ID | 204, 404 |
+
+---
+
+## 💻 Sample `curl -i` Request & Response
+
+```http
+HTTP/1.1 200 OK
+date: Tue, 18 Aug 2026 12:45:00 GMT
+server: uvicorn
+content-length: 122
+content-type: application/json
+
+[
+  {"id":1,"title":"Buy groceries","done":false},
+  {"id":2,"title":"Read FastAPI docs","done":true},
+  {"id":3,"title":"Build CRUD API","done":false}
+]
+```
 
 ## 📊 Executed SQL Example
 
@@ -56,9 +78,10 @@ SELECT * FROM tasks WHERE done = 1;
 
 ## 📸 Screenshots
 
-### Database Viewer (DB Browser for SQLite)
-![Database Viewer](sql_explored.png)
-(database_overview.png)
+### Database Viewer (SQLite - VS Code Extension)
+![Database Viewer](database_overview.png)
+![explored SQLite](sql_explored.png)
+
 
 
 ### Swagger UI
