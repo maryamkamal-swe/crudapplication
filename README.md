@@ -94,13 +94,13 @@ Verified data persistence across container resets by creating a record, tearing 
 
 ## 📸 Screenshots
 ### Docker
-![Docker compose](docker_compose.png)
-![Persistence proof](persistence.png)
+![Docker compose](screenshots/docker_compose.png)
+![Persistence proof](screenshots/persistence.png)
 ### Database Viewer (SQLite - VS Code Extension)
-![Database Viewer](database_overview.png)
-![explored SQLite](sql_explored.png)
+![Database Viewer](screenshots/database_overview.png)
+![explored SQLite](screenshots/sql_explored.png)
 
 
 
 ### Swagger UI
-![Swagger UI- Task 1](swagger-ui.png)
+![Swagger UI- Task 1](screenshots/swagger-ui.png)
