@@ -33,6 +33,19 @@ A lightweight RESTful CRUD API built with Python and FastAPI, backed by a SQLite
 
 ---
 
+
+## Option 2: Docker / GitHub Codespaces
+**Launch the container stack:**
+
+```bash
+docker compose up -d 
+```
+**Verify container status:**
+
+```bash
+docker ps
+```
+
 The API will be available at `http://localhost:8000`.
 
 ---
@@ -76,8 +89,13 @@ SELECT * FROM tasks WHERE done = 1;
 
 ---
 
-## 📸 Screenshots
+## 💾 Persistence Proof
+Verified data persistence across container resets by creating a record, tearing down the Docker container stack with docker compose down, restarting with docker compose up -d, and confirming task retention via GET /tasks.
 
+## 📸 Screenshots
+### Docker
+![Docker compose](docker_compose.png)
+![Persistence](persistence.png)
 ### Database Viewer (SQLite - VS Code Extension)
 ![Database Viewer](database_overview.png)
 ![explored SQLite](sql_explored.png)
