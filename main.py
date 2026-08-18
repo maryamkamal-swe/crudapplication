@@ -37,3 +37,27 @@ def get_task(task_id: int):
         status_code=404,
         content={"error": f"Task {task_id} not found"}
     )
+
+# POST /tasks - Create a new task with validation
+@app.post("/tasks", status_code=201)
+def create_task(task_data: dict):
+    title = task_data.get("title")
+    
+    # Input validation: return 400 if title is missing or empty
+    if not title or not str(title).strip():
+        return JSONResponse(
+            status_code=400,
+            content={"error": "Title is required and cannot be empty"}
+        )
+    
+    # Generate the next free ID
+    new_id = max([t["id"] for t in tasks], default=0) + 1
+    
+    new_task = {
+        "id": new_id,
+        "title": str(title).strip(),
+        "done": False
+    }
+    
+    tasks.append(new_task)
+    return new_task
