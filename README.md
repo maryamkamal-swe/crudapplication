@@ -1,10 +1,17 @@
 # Task API
 
-A lightweight in-memory RESTful CRUD API built with Python and FastAPI for managing a to-do task list.
+A lightweight RESTful CRUD API built with Python and FastAPI, backed by a SQLite database (`tasks.db`).
 
 ---
 
-## 🚀 How to Install & Run
+## 💾 Why SQLite Was Chosen
+* **Zero Configuration:** Lightweight file-based relational database requiring no separate server process.
+* **Persistence:** Data survives application restarts and persists locally in `tasks.db`.
+* **Automatic Creation:** Database and tables are generated automatically on startup.
+
+---
+
+## 🚀 How to Run
 
 1. **Clone the repository:**
    ```bash
@@ -24,44 +31,33 @@ A lightweight in-memory RESTful CRUD API built with Python and FastAPI for manag
    uvicorn main:app --reload --port 8000
    ```
 
-The API will be available at `http://localhost:8000`.
-
 ---
 
 ## 📑 API Endpoints
 
-| HTTP Method | Endpoint | Description | Expected Status Codes |
+| Method | Endpoint | Description | Status Codes |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/` | API Metadata | 200 |
-| `GET` | `/health` | Server Health Check | 200 |
-| `GET` | `/tasks` | Retrieve all tasks | 200 |
-| `GET` | `/tasks/{id}` | Retrieve a single task by ID | 200, 404 |
-| `POST` | `/tasks` | Create a new task (validates `title`) | 201, 400 |
-| `PUT` | `/tasks/{id}` | Update an existing task | 200, 400, 404 |
-| `DELETE` | `/tasks/{id}` | Delete a task by ID | 204, 404 |
+| `GET` | `/tasks` | List all tasks | 200 |
+| `GET` | `/tasks/{id}` | Get task by ID | 200, 404 |
+| `POST` | `/tasks` | Create task | 201, 400 |
+| `PUT` | `/tasks/{id}` | Update task | 200, 400, 404 |
+| `DELETE` | `/tasks/{id}` | Delete task | 204, 404 |
 
 ---
 
-## 💻 Sample `curl -i` Request & Response
+## 📊 Executed SQL Example
 
-```http
-HTTP/1.1 200 OK
-date: Tue, 18 Aug 2026 12:45:00 GMT
-server: uvicorn
-content-length: 122
-content-type: application/json
-
-[
-  {"id":1,"title":"Buy groceries","done":false},
-  {"id":2,"title":"Read FastAPI docs","done":true},
-  {"id":3,"title":"Build CRUD API","done":false}
-]
+```sql
+SELECT * FROM tasks WHERE done = 1;
 ```
+*Returns all tasks where the completed status flag is set to 1 (True).*
 
 ---
 
-## 🎨 Interactive Documentation (Swagger UI)
+## 📸 Screenshots
 
-Interactive OpenAPI documentation is generated automatically and accessible at `http://localhost:8000/docs`.
+### Database Viewer (DB Browser for SQLite)
+![Database Viewer](db-browser.png)
 
+### Swagger UI
 ![Swagger UI](swagger-ui.png)
