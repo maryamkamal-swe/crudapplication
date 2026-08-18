@@ -1,7 +1,11 @@
 from fastapi import FastAPI, Response
 from fastapi.responses import JSONResponse
 
-app = FastAPI()
+app = FastAPI(
+    title="Task API",
+    description="A simple in-memory CRUD API for managing tasks.",
+    version="1.0"
+)
 
 # In-memory "database" pre-filled with 3 tasks
 tasks = [
@@ -10,7 +14,7 @@ tasks = [
     {"id": 3, "title": "Build CRUD API", "done": False},
 ]
 
-@app.get("/")
+@app.get("/", summary="Get API metadata")
 def get_root():
     return {
         "name": "Task API",
@@ -18,17 +22,15 @@ def get_root():
         "endpoints": ["/tasks"]
     }
 
-@app.get("/health")
+@app.get("/health", summary="Health check endpoint")
 def get_health():
     return {"status": "ok"}
 
-# GET /tasks - Return all tasks
-@app.get("/tasks")
+@app.get("/tasks", summary="List all tasks")
 def get_tasks():
     return tasks
 
-# GET /tasks/{task_id} - Return a single task or 404 error
-@app.get("/tasks/{task_id}")
+@app.get("/tasks/{task_id}", summary="Get a task by ID")
 def get_task(task_id: int):
     for task in tasks:
         if task["id"] == task_id:
@@ -38,8 +40,7 @@ def get_task(task_id: int):
         content={"error": f"Task {task_id} not found"}
     )
 
-# POST /tasks - Create a new task with validation
-@app.post("/tasks", status_code=201)
+@app.post("/tasks", status_code=201, summary="Create a new task")
 def create_task(task_data: dict):
     title = task_data.get("title")
     if not title or not str(title).strip():
@@ -57,8 +58,7 @@ def create_task(task_data: dict):
     tasks.append(new_task)
     return new_task
 
-# PUT /tasks/{task_id} - Update an existing task
-@app.put("/tasks/{task_id}")
+@app.put("/tasks/{task_id}", summary="Update a task by ID")
 def update_task(task_id: int, task_data: dict):
     for task in tasks:
         if task["id"] == task_id:
@@ -79,8 +79,7 @@ def update_task(task_id: int, task_data: dict):
         content={"error": f"Task {task_id} not found"}
     )
 
-# DELETE /tasks/{task_id} - Delete a task
-@app.delete("/tasks/{task_id}")
+@app.delete("/tasks/{task_id}", summary="Delete a task by ID")
 def delete_task(task_id: int):
     for index, task in enumerate(tasks):
         if task["id"] == task_id:
