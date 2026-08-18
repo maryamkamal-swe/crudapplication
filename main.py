@@ -1,14 +1,23 @@
+import os
 import sqlite3
+from dotenv import load_dotenv
 from fastapi import FastAPI, Response
 from fastapi.responses import JSONResponse
 
+load_dotenv()
+
+DB_FILE = os.getenv("DB_FILE", "tasks.db")
+
+# Ensure target directory exists when saving to a subfolder like /app/data/
+db_dir = os.path.dirname(DB_FILE)
+if db_dir:
+    os.makedirs(db_dir, exist_ok=True)
+
 app = FastAPI(
     title="Task API",
-    description="A SQLite-backed CRUD API for managing tasks.",
-    version="2.0"
+    description="A SQLite-backed CRUD API running inside Docker.",
+    version="3.0"
 )
-
-DB_FILE = "tasks.db"
 
 def get_db_connection():
     conn = sqlite3.connect(DB_FILE)
@@ -19,7 +28,6 @@ def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Create tasks table if it does not exist
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,7 +36,6 @@ def init_db():
         )
     """)
     
-    # Seed 3 initial tasks only if table is empty
     cursor.execute("SELECT COUNT(*) FROM tasks")
     count = cursor.fetchone()[0]
     
@@ -54,7 +61,7 @@ def startup_event():
 def get_root():
     return {
         "name": "Task API",
-        "version": "2.0",
+        "version": "3.0",
         "endpoints": ["/tasks"]
     }
 
@@ -62,7 +69,6 @@ def get_root():
 def get_health():
     return {"status": "ok"}
 
-# GET /tasks - Read all tasks
 @app.get("/tasks", summary="List all tasks")
 def get_tasks():
     conn = get_db_connection()
@@ -76,7 +82,6 @@ def get_tasks():
         for row in rows
     ]
 
-# GET /tasks/{task_id} - Read single task
 @app.get("/tasks/{task_id}", summary="Get a task by ID")
 def get_task(task_id: int):
     conn = get_db_connection()
@@ -93,7 +98,6 @@ def get_task(task_id: int):
     
     return {"id": row["id"], "title": row["title"], "done": bool(row["done"])}
 
-# POST /tasks - Create a new task
 @app.post("/tasks", status_code=201, summary="Create a new task")
 def create_task(task_data: dict):
     title = task_data.get("title")
@@ -113,7 +117,6 @@ def create_task(task_data: dict):
     
     return {"id": new_id, "title": clean_title, "done": False}
 
-# PUT /tasks/{task_id} - Update a task
 @app.put("/tasks/{task_id}", summary="Update a task by ID")
 def update_task(task_id: int, task_data: dict):
     conn = get_db_connection()
@@ -154,7 +157,6 @@ def update_task(task_id: int, task_data: dict):
     
     return {"id": task_id, "title": current_title, "done": bool(current_done)}
 
-# DELETE /tasks/{task_id} - Delete a task
 @app.delete("/tasks/{task_id}", summary="Delete a task by ID")
 def delete_task(task_id: int):
     conn = get_db_connection()
