@@ -23,7 +23,7 @@ A lightweight RESTful CRUD API built with Python and FastAPI, backed by a SQLite
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   pip install fastapi uvicorn
+   pip install -r requirements.txt
    ```
 
 3. **Start the server:**
@@ -95,7 +95,7 @@ Verified data persistence across container resets by creating a record, tearing 
 ## 📸 Screenshots
 ### Docker
 ![Docker compose](docker_compose.png)
-![Persistence](persistence.png)
+![Persistence proof](persistence.png)
 ### Database Viewer (SQLite - VS Code Extension)
 ![Database Viewer](database_overview.png)
 ![explored SQLite](sql_explored.png)
@@ -103,4 +103,4 @@ Verified data persistence across container resets by creating a record, tearing 
 
 
 ### Swagger UI
-![Swagger UI](swagger-ui.png)
+![Swagger UI- Task 1](swagger-ui.png)
